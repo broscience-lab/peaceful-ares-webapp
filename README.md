@@ -1,38 +1,30 @@
-# create-svelte
+# peaceful-ares-webapp
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+Web application for _Project Peaceful Ares_ -- a tool for fitness tracking.
 
-## Creating a project
+Built with 💖 using SvelteKit.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Requirements
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+- Docker
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+## Development
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+After cloning the project make a copy of [.env.example](./.env.example) called
+`.env`, then run
 
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+docker compose up --no-deps --build
 ```
 
-## Building
+to build the [Dockerfile](./Dockerfile) and start a development container.
 
-To create a production version of your app:
+## Configuration
 
-```bash
-npm run build
-```
+For project configuration, change environment variables in `.env`.
 
-You can preview the production build with `npm run preview`.
+Refer to the table below for an overview of the configuration options.
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+| environment variable | explanation                                     | default value |
+| -------------------- | ----------------------------------------------- | ------------- |
+| VITE_PORT            | Port that the the SvelteKit webapp will run on. | 3000          |
