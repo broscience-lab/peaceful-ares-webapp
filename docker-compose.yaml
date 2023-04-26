@@ -1,0 +1,13 @@
+services:
+  webapp:
+    build:
+      context: .
+      target: development
+      dockerfile: Dockerfile
+      args:
+        VITE_PORT: ${VITE_PORT:-3000}
+    volumes:
+      - ./:/app
+      - /node_modules
+    ports:
+      - "${VITE_PORT:-3000}:${VITE_PORT:-3000}"
