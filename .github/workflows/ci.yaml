@@ -24,7 +24,7 @@ jobs:
       # Cache pnpm artifacts
       - uses: actions/setup-node@v3
         with:
-          node-version: $NODE_VERSION
+          node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -47,7 +47,7 @@ jobs:
       # Cache pnpm artifacts
       - uses: actions/setup-node@v3
         with:
-          node-version: $NODE_VERSION
+          node-version: ${{ env.NODE_VERSION }}
           cache: "pnpm"
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
