@@ -7,12 +7,14 @@ env:
 # Run CI whenever there is a PR or push to main.
 on:
   push:
-    branches: [$default-branch]
+    # Add branch itself for testing
+    branches: [$default-branch, "6-set-up-cicd"]
   pull_request:
     branches: [$default-branch]
 
 jobs:
   lint_and_test:
+    name: Lint and run unit tests using vitest
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -31,6 +33,29 @@ jobs:
         with:
           context: .
           target: "vitest_tests"
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+  e2e_testing:
+    name: Run E2E tests with playwright
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 6.32.9
+      # Cache pnpm artifacts
+      - uses: actions/setup-node@v3
+        with:
+          node-version: $NODE_VERSION
+          cache: "pnpm"
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Build the Docker unit tests image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          target: "playwright_tests"
           push: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
