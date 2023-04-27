@@ -37,7 +37,7 @@ jobs:
           push: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          output: out/coverage/
+          outputs: out/coverage/
   static_analysis:
     name: Static analysis with SonarCloud
     runs-on: ubuntu-latest
