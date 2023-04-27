@@ -35,8 +35,6 @@ jobs:
           context: .
           target: "export_coverage"
           push: false
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
           outputs: out/coverage/
   static_analysis:
     name: Static analysis with SonarCloud
