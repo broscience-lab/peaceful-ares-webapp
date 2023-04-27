@@ -6,7 +6,11 @@ Built with 💖 using SvelteKit.
 
 ## Requirements
 
-- Docker
+Below is the list of requirements needed to run and develop the project.
+
+- [Docker](https://docs.docker.com/get-docker/)
+- [Node](https://nodejs.org/en/download) _v16.14 or higher_
+- [Pnpm](https://pnpm.io/installation)
 
 ## Development
 
