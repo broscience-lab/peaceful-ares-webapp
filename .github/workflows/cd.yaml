@@ -5,7 +5,6 @@ env:
   LOCATION: "europe-west4"
   PROJECT: "peaceful-ares"
   REGISTRY: "peaceful-ares-registry"
-  AR_HOST: "${{ env.LOCATION }}-docker.pkg.dev/${{ env.PROJECT }}/${{ env.REGISTRY }}"
   IMAGE_NAME: "webapp"
 
 on:
@@ -27,8 +26,10 @@ jobs:
     # if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v3
-      - name: Set SHORT_SHA env property for tagging image
-        run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+      - name: Set SHORT_SHA and AR_HOST env vars for tagging and pushing image
+        run: |
+          echo "SHORT_SHA=${{ env.GITHUB_SHA }}` | cut -c1-7`" >> $GITHUB_ENV
+          echo "AR_HOST=${{ env.LOCATION }}-docker.pkg.dev/${{ env.PROJECT }}/${{ env.REGISTRY }}" >> $GITHUB_ENV
       - name: Authenticate gcloud cli
         uses: google-github-actions/auth@v1
         with:
