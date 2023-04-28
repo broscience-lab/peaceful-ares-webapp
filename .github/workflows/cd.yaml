@@ -1,0 +1,25 @@
+name: CD
+run-name: Continuous Delivery
+
+# Only trigger when the CI workflow succeeded
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+
+jobs:
+  delivery:
+    name: Deliver docker image to Google Artifact Registry
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Authenticate gcloud cli"
+        uses: "google-github-actions/auth@v1"
+        with:
+          credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
+
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v1"
+
+      - name: "Use gcloud CLI to test successful auth"
+        run: gcloud artifacts repositories list
