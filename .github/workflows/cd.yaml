@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Set SHORT_SHA and AR_HOST env vars for tagging and pushing image
         run: |
-          echo "SHORT_SHA=${{ env.GITHUB_SHA }}` | cut -c1-7`" >> $GITHUB_ENV
+          echo "SHORT_SHA=${GITHUB_SHA}` | cut -c1-7`" >> $GITHUB_ENV
           echo "AR_HOST=${{ env.LOCATION }}-docker.pkg.dev/${{ env.PROJECT }}/${{ env.REGISTRY }}" >> $GITHUB_ENV
       - name: Authenticate gcloud cli
         uses: google-github-actions/auth@v1
