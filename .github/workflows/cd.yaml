@@ -1,6 +1,13 @@
 name: CD
 run-name: Continuous Delivery
 
+env:
+  LOCATION: "europe-west4"
+  PROJECT: "peaceful-ares"
+  REGISTRY: "peaceful-ares-registry"
+  AR_HOST: "$LOCATION-docker.pkg.dev/$PROJECT/$REGISTRY"
+  IMAGE_NAME: "webapp"
+
 on:
   push:
     # Add branch itself for testing
@@ -19,13 +26,24 @@ jobs:
     # only run when CI was successful
     # if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - name: "Authenticate gcloud cli"
-        uses: "google-github-actions/auth@v1"
+      - uses: actions/checkout@v3
+      - name: Set SHORT_SHA env property for tagging image
+        run: echo "SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+      - name: Authenticate gcloud cli
+        uses: google-github-actions/auth@v1
         with:
           credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
 
-      - name: "Set up Cloud SDK"
-        uses: "google-github-actions/setup-gcloud@v1"
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
 
-      - name: "Use gcloud CLI to test successful auth"
-        run: gcloud artifacts repositories list
+      - name: Authenticate docker
+        run: gcloud auth configure-docker "$LOCATION-.docker.pkg.dev"
+
+      - name: Build and tag production img and push
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: |
+            ${{ env.AR_HOST }}/${{ env.IMAGE_NAME }}:${{ env.SHORT_SHA }}
+            ${{ env.AR_HOST }}/${{ env.IMAGE_NAME }}:latest
