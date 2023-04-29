@@ -7,11 +7,10 @@ env:
 # Run CI whenever there is a PR or push to main.
 on:
   push:
-    # Add branch itself for testing
-    branches: [$default-branch, "6-set-up-cicd"]
+    branches: ["main"]
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: [$default-branch]
+    branches: ["main"]
 
 jobs:
   lint_and_test:

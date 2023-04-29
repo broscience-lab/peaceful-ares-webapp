@@ -1,4 +1,4 @@
-name: CD
+name: delivery
 run-name: Continuous Delivery
 
 env:
@@ -8,22 +8,19 @@ env:
   IMAGE_NAME: "webapp"
 
 on:
-  push:
-    # Add branch itself for testing
-    branches: ["6-set-up-cicd"]
-# Only trigger when the CI workflow succeeded
-# on:
-#   workflow_run:
-#     workflows: ["CI"]
-#     types:
-#       - completed
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
 
 jobs:
   delivery:
     name: Deliver docker image to Google Artifact Registry
     runs-on: ubuntu-latest
     # only run when CI was successful
-    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: |
+      ${{ github.event.workflow_run.conclusion == 'success' }} &&
+      github.event.pull_request.merged == true
     steps:
       - uses: actions/checkout@v3
       - name: Set SHORT_SHA and AR_HOST env vars for tagging and pushing image
