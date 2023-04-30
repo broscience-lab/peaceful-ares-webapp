@@ -9,13 +9,11 @@ on:
       - completed
 
 jobs:
-  preview:
+  deploy:
     name: Preview
     runs-on: ubuntu-latest
     # only run on PRs and if delivery was successful
     if: github.event.workflow_run.conclusion == 'success'
-    environment:
-      name: development
     steps:
       - name: Set SHORT_SHA env var that image was tagged with in delivery pipeline
         run: |
