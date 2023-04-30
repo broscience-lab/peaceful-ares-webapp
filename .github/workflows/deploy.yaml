@@ -1,0 +1,26 @@
+name: send-deploy-event
+run-name: Continuous Deployment
+
+# Only trigger when the delivery workflow succeeded
+on:
+  workflow_run:
+    workflows: ["delivery"]
+    types:
+      - completed
+
+jobs:
+  preview:
+    name: Preview
+    runs-on: ubuntu-latest
+    # only run on PRs and if delivery was successful
+    if: ${{ github.event.workflow_run.conclusion == "success" && github.event.name == "pull_request"  }}
+    environment:
+      name: development
+    steps:
+      - name: Dispatch deploy-event to gcp repo
+        run: |
+          curl --request POST \
+          --url https://api.github.com/repos/broscience-lab/peaceful-ares-gcp/dispatches \
+          -u ${{ secrets.GCP_REPO_PAT }} \
+          --header 'Content-Type: application/json' \
+          --data '{ "event_type": "deploy-event", "client_payload": { "passed": false, "message": "${{ env.SHORT_SHA }}" } }'

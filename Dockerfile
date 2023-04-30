@@ -13,13 +13,17 @@ RUN pnpm install
 FROM base AS development
 ENV NODE_ENV=development
 ENV PATH=/app/node_modules/.bin:$PATH
-RUN pnpm install --only=development
+RUN pnpm install
 CMD ["pnpm", "dev", "--", "--host", "0.0.0.0"]
 
 FROM base AS vitest_tests
 COPY . ./
 RUN pnpm lint \
-    && npx vitest --run
+    && pnpm coverage
+
+# Scratch stage to output coverage artifacts (see https://docs.docker.com/build/exporters/#export-filesystem)
+FROM scratch AS export_coverage
+COPY --from=vitest_tests /app/coverage .
 
 FROM mcr.microsoft.com/playwright:v1.28.1-focal AS playwright_tests
 RUN npm install -g pnpm@8.3.1
