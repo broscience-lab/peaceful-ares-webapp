@@ -19,9 +19,8 @@ jobs:
         run: |
           echo "SHORT_SHA=$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_ENV
       - name: Dispatch deploy-event to gcp repo
-        run: |
-          curl --request POST \
-          --url https://api.github.com/repos/broscience-lab/peaceful-ares-gcp/dispatches \
-          -u ${{ secrets.GCP_REPO_PAT }} \
-          --header 'Content-Type: application/json' \
-          --data '{ "event_type": "deploy-event", "client_payload": { "passed": false, "message": "${{ env.SHORT_SHA }}" } }'
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.GCP_REPO_PAT }}
+          repository: username/my-repo
+          event-type: my-event
