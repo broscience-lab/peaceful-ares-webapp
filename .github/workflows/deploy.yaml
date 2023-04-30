@@ -24,4 +24,4 @@ jobs:
           token: ${{ secrets.GCP_REPO_PAT }}
           repository: broscience-lab/peaceful-ares-gcp
           event-type: deploy-event
-          client_payload: '{ "message": "$SHORT_SHA" }'
+          client_payload: '{ "message": "${{ env.SHORT_SHA }}" }'
